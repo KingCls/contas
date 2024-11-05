@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro - Gerenciador de Contas</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Incluindo o Font Awesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <script type="module" defer src="register.js"></script>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Cadastre-se no Gerenciador de Contas</h2>
+    <form id="register-form">
+      <div class="form-group">
+        <label for="register-nickname">NickName:</label>
+        <input type="text" id="register-nickname" required>
+      </div>
+      <div class="form-group">
+        <label for="register-email">Email:</label>
+        <input type="email" id="register-email" required>
+      </div>
+      <div class="form-group">
+        <label for="register-password">Senha:</label>
+        <input type="password" id="register-password" required>
+      </div>
+      <div class="form-group">
+        <label for="register-confirm-password">Confirme a Senha:</label>
+        <input type="password" id="register-confirm-password" required>
+      </div>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <p>Já possui uma conta? <a href="index.html">Faça login aqui</a>.</p>
+  </div>
+  <!-- Container para Notificações Toast -->
+  <div id="toast-container"></div>
+</body>
+</html>

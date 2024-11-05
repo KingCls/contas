@@ -1,0 +1,705 @@
+/* styles.css */
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos base */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+}
+
+/* Navegação */
+nav {
+    background-color: #27293d;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  nav h2 {
+    font-size: 1.8rem;
+    font-weight: 500;
+  }
+  
+  nav .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  nav #user-nickname {
+    font-size: 1rem;
+    color: #f0f0f0;
+  }
+  
+  nav button {
+    background-color: transparent;
+    color: #f0f0f0;
+    border: 2px solid #f0f0f0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+  }
+  
+  nav button:hover {
+    background-color: #f0f0f0;
+    color: #1e1e2f;
+  }
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+}
+
+.header button {
+    background-color: #ff6b81;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+}
+
+.header button:hover {
+    background-color: #ff4757;
+}
+
+/* Tabela */
+#accounts-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2f3142;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#accounts-table th, #accounts-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #393c52;
+}
+
+#accounts-table th {
+    background-color: #343652;
+    font-weight: 500;
+}
+
+#accounts-table tbody tr:hover {
+    background-color: #393c52;
+    cursor: pointer;
+}
+
+#accounts-table td {
+    font-size: 0.95rem;
+}
+
+/* Botões de ação */
+.actions button {
+    background-color: #1e90ff;
+    width: 100px;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.actions button:hover {
+    background-color: #1c86ee;
+}
+
+.actions button.delete {
+    background-color: #ff6b81;
+}
+
+.actions button.delete:hover {
+    background-color: #ff4757;
+}
+
+/* Modais */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    background-color: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #2f3142;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    border-radius: 20px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    color: #f0f0f0;
+}
+
+.modal-content h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #f0f0f0;
+    transition: color 0.3s ease;
+}
+
+.modal-content .close:hover {
+    color: #ff6b81;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #c0c0c0;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #393c52;
+    color: #f0f0f0;
+    font-size: 1rem;
+}
+
+.form-group input::placeholder {
+    color: #a0a0a0;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    background-color: #43465e;
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.form-navigation button {
+    flex: 1;
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+}
+
+.form-navigation button:hover {
+    background-color: #1c86ee;
+}
+
+.form-navigation button#prev-step {
+    background-color: #a9a9a9;
+}
+
+.form-navigation button#prev-step:hover {
+    background-color: #808080;
+}
+
+.form-navigation button#submit-account {
+    background-color: #2ed573;
+}
+
+.form-navigation button#submit-account:hover {
+    background-color: #20bf6b;
+}
+
+/* Passos do formulário */
+.step h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.step p {
+    margin-bottom: 1rem;
+}
+
+/* Status */
+.status-ativa {
+    color: #28a745;
+}
+
+.status-inativa {
+    color: #6c757d;
+}
+
+.status-suspensa {
+    color: #ffc107;
+}
+
+.status-banida {
+    color: #dc3545;
+}
+
+/* Ícones de Elo */
+.elo-preview-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.elo-icon {
+    max-width: 50px;
+    height: auto;
+}
+
+/* Modal de detalhes da conta */
+#account-modal .modal-content {
+    background-color: #2f3142;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    border-radius: 20px;
+    position: relative;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#account-modal h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #ffa502;
+}
+
+#account-modal .elo-icon {
+    width: 80px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+#account-modal .status {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+#account-modal .status.status-ativa {
+    color: #28a745;
+}
+
+#account-modal .status.status-inativa {
+    color: #6c757d;
+}
+
+#account-modal .status.status-suspensa {
+    color: #ffc107;
+}
+
+#account-modal .status.status-banida {
+    color: #dc3545;
+}
+
+#account-modal .account-details {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    background: #3a3d4e;
+    border-radius: 10px;
+}
+
+#account-modal .account-details .detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+#account-modal .account-details .detail label {
+    width: 150px;
+    font-weight: 500;
+    color: #c0c0c0;
+    flex-shrink: 0;
+}
+
+#account-modal .account-details .detail .value {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: #43465e;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    color: #f0f0f0;
+}
+
+#account-modal .account-details .detail .value span {
+    margin-right: 0.5rem;
+}
+
+#account-modal .account-details .detail .value button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+#account-modal .account-details .detail .value button img {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+    transition: transform 0.2s;
+}
+
+#account-modal .account-details .detail .value button:hover img {
+    transform: scale(1.1);
+}
+
+/* Centralizar e estilizar o botão "Alterar Status" */
+#alterar-status-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+#change-status-button {
+    background-color: #ffa502;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(255, 165, 2, 0.4);
+}
+
+#change-status-button:hover {
+    background-color: #e67e22;
+}
+
+/* Botão de fechar modal */
+#account-modal .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #f0f0f0;
+    transition: color 0.3s ease;
+}
+
+#account-modal .close:hover {
+    color: #ff6b81;
+}
+
+/* Botão "Alterar Status" */
+#change-status-button {
+    background-color: #ffa502;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+#change-status-button:hover {
+    background-color: #e67e22;
+}
+
+/* Modal de alterar status */
+#change-status-modal .modal-content {
+    background-color: #2f3142;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    border-radius: 20px;
+    position: relative;
+    color: #f0f0f0;
+}
+
+#change-status-modal .modal-content button[type="submit"] {
+    background-color: #2ed573;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+#change-status-modal .modal-content button[type="submit"]:hover {
+    background-color: #20bf6b;
+}
+
+/* Botão de copiar */
+.copy-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.copy-button img {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+    transition: transform 0.2s;
+}
+
+.copy-button:hover img {
+    transform: scale(1.1);
+}
+
+/* Notificações Toast */
+#toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1100;
+}
+
+.toast {
+    background-color: #2ed573;
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 30px;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    animation: fadeInOut 4s forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10%, 90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+
+/* Scroll personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2f3142;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #43465e;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5a5e78;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .form-navigation {
+        flex-direction: column;
+    }
+
+    #accounts-table td, #accounts-table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+    }
+}
+
+/* styles.css */
+
+/* (Estilos existentes permanecem) */
+
+/* Estilos para a página de login */
+.login-container {
+    max-width: 400px;
+    margin: 5rem auto;
+    background-color: #2f3142;
+    padding: 2rem;
+    border-radius: 20px;
+    color: #f0f0f0;
+    text-align: center;
+  }
+  
+  .login-container h2 {
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+  }
+  
+  .login-container .form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+  
+  .login-container .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #c0c0c0;
+  }
+  
+  .login-container .form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #393c52;
+    color: #f0f0f0;
+    font-size: 1rem;
+  }
+  
+  .login-container .form-group input::placeholder {
+    color: #a0a0a0;
+  }
+  
+  .login-container .form-group input:focus {
+    outline: none;
+    background-color: #43465e;
+  }
+  
+  .login-container button {
+    width: 100%;
+    background-color: #1e90ff;
+    color: #fff;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-container button:hover {
+    background-color: #1c86ee;
+  }
+  
+  /* Notificações Toast */
+  #toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1100;
+  }
+  
+  .toast {
+    background-color: #2ed573;
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 30px;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    animation: fadeInOut 4s forwards;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10%, 90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+  }
+  
+  #edit-account-button {
+    background-color: #2e86de; /* Azul elegante */
+    color: #fff; /* Texto branco para contraste */
+    border: none; /* Remove borda padrão */
+    padding: 0.75rem 1.5rem; /* Ajusta tamanho do botão */
+    font-size: 1rem; /* Tamanho de fonte confortável */
+    border-radius: 8px; /* Bordas arredondadas */
+    cursor: pointer; /* Indicador de clique */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Efeito de transição */
+    display: block;
+    width: 100%; /* Responsivo */
+    max-width: 200px; /* Limite de largura para adaptação */
+    margin: 1rem auto; /* Centraliza o botão */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Leve sombra para destacar */
+}
+
+#edit-account-button:hover {
+    background-color: #1e6bb8; /* Escurece no hover */
+    transform: scale(1.05); /* Leve aumento ao passar o mouse */
+}
+
+#edit-account-button:active {
+    background-color: #174a85; /* Cor de fundo ao clicar */
+    transform: scale(1); /* Remove o aumento ao clicar */
+}

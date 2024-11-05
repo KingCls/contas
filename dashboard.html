@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel - Gerenciador de Contas</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Incluindo o Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Incluindo o script do dashboard -->
+    <script type="module" defer src="dashboard.js"></script>
+</head>
+<body>
+    <nav>
+        <h2>Gerenciador de Contas</h2>
+        <div class="user-info">
+            <span id="user-nickname"></span>
+            <button id="logout-button">Sair</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Lista de Contas</h1>
+            <button id="add-account-button">Adicionar Conta</button>
+        </div>
+
+        <table id="accounts-table">
+            <thead>
+                <tr>
+                    <th>Nickname</th>
+                    <th>Tipo</th>
+                    <th>Elo</th>
+                    <th>Status de Uso</th>
+                    <th>Condição</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Modal de Adicionar Conta -->
+    <div id="add-account-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-add-account-modal" class="close">&times;</span>
+            <h2>Adicionar Nova Conta</h2>
+            <form id="add-account-form">
+                <!-- Passo 1 -->
+                <div class="step step-1">
+                    <h3>Passo 1: Informações Básicas</h3>
+                    <div class="form-group">
+                        <label for="nickname">Nickname:</label>
+                        <input type="text" id="nickname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login">Login:</label>
+                        <input type="text" id="login" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="senha">Senha:</label>
+                        <input type="password" id="senha" required>
+                    </div>
+                </div>
+                <!-- Passo 2 -->
+                <div class="step step-2 hidden">
+                    <h3>Passo 2: Detalhes da Conta</h3>
+                    <div class="form-group">
+                        <label for="tipo">Tipo de Conta:</label>
+                        <select id="tipo" required>
+                            <option value="NFA">NFA</option>
+                            <option value="FA">FA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="elo">Elo:</label>
+                        <select id="elo" required>
+                            <option value="Unranked_Rank">Unranked</option>
+                            <option value="Iron_1_Rank">Iron 1</option>
+                            <option value="Iron_2_Rank">Iron 2</option>
+                            <option value="Iron_3_Rank">Iron 3</option>
+                            <option value="Bronze_1_Rank">Bronze 1</option>
+                            <option value="Bronze_2_Rank">Bronze 2</option>
+                            <option value="Bronze_3_Rank">Bronze 3</option>
+                            <option value="Silver_1_Rank">Silver 1</option>
+                            <option value="Silver_2_Rank">Silver 2</option>
+                            <option value="Silver_3_Rank">Silver 3</option>
+                            <option value="Gold_1_Rank">Gold 1</option>
+                            <option value="Gold_2_Rank">Gold 2</option>
+                            <option value="Gold_3_Rank">Gold 3</option>
+                            <option value="Platinum_1_Rank">Platinum 1</option>
+                            <option value="Platinum_2_Rank">Platinum 2</option>
+                            <option value="Platinum_3_Rank">Platinum 3</option>
+                            <option value="Diamond_1_Rank">Diamond 1</option>
+                            <option value="Diamond_2_Rank">Diamond 2</option>
+                            <option value="Diamond_3_Rank">Diamond 3</option>
+                            <option value="Ascendant_1_Rank">Ascendant 1</option>
+                            <option value="Ascendant_2_Rank">Ascendant 2</option>
+                            <option value="Ascendant_3_Rank">Ascendant 3</option>
+                            <option value="Immortal_1_Rank">Immortal 1</option>
+                            <option value="Immortal_2_Rank">Immortal 2</option>
+                            <option value="Immortal_3_Rank">Immortal 3</option>
+                            <option value="Radiant_Rank">Radiant</option>
+                        </select>
+                        <div class="elo-preview-container">
+                            <img id="elo-image" src="" alt="Elo selecionado" class="elo-icon">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="skins">Média de Skins:</label>
+                        <select id="skins" required>
+                            <option value="1-10">1-10</option>
+                            <option value="11-20">11-20</option>
+                            <option value="21-50">21-50</option>
+                            <option value="51-100">51-100</option>
+                            <option value="101+">101+</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Passo 3 -->
+                <div class="step step-3 hidden">
+                    <h3>Passo 3: Status da Conta</h3>
+                    <div class="form-group">
+                        <label for="status-uso">Status de Uso:</label>
+                        <select id="status-uso" required>
+                            <option value="Ativa">Ativa</option>
+                            <option value="Inativa">Inativa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status-condicao">Condição da Conta:</label>
+                        <select id="status-condicao" required>
+                            <option value="Safe">Safe</option>
+                            <option value="Suspensa">Suspensa</option>
+                            <option value="Banida">Banida</option>
+                        </select>
+                    </div>
+                    <div class="form-group hidden" id="suspension-group">
+                        <label for="suspension-date">Data de Fim da Suspensão:</label>
+                        <input type="date" id="suspension-date">
+                    </div>
+                </div>
+                <!-- Passo 4 -->
+                <div class="step step-4 hidden">
+                    <h3>Passo 4: Confirmação</h3>
+                    <div class="form-group" id="email-group" style="display: none;">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email">
+                    </div>
+                    <div class="form-group" id="email-password-group" style="display: none;">
+                        <label for="email-password">Senha do Email:</label>
+                        <input type="password" id="email-password">
+                    </div>
+                    <p>Revise as informações antes de adicionar a conta.</p>
+                </div>
+                <!-- Botões de Navegação -->
+                <div class="form-navigation">
+                    <button type="button" id="prev-step" class="hidden">Anterior</button>
+                    <button type="button" id="next-step">Próximo</button>
+                    <button type="submit" id="submit-account" class="hidden">Adicionar Conta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Detalhes da Conta -->
+    <div id="account-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2 id="modal-nickname"></h2>
+            <img id="modal-elo-icon" src="" alt="Elo" class="elo-icon">
+            <div class="status">
+                <span id="modal-status-uso"></span> | <span id="modal-status-condicao"></span>
+            </div>
+            <div class="account-details">
+                <div class="detail">
+                    <label>Login:</label>
+                    <div class="value">
+                        <span id="modal-login"></span>
+                        <button onclick="copyToClipboard('modal-login')"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+                <div class="detail">
+                    <label>Senha:</label>
+                    <div class="value">
+                        <span id="modal-senha" class="password-hidden">••••••••</span>
+                        <button class="toggle-password" onclick="togglePasswordVisibility('modal-senha')"><i class="fas fa-eye"></i></button>
+                        <button onclick="copyToClipboard('modal-senha')"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+                <div class="detail" id="email-detail" style="display: none;">
+                    <label>Email:</label>
+                    <div class="value">
+                        <span id="modal-email"></span>
+                        <button onclick="copyToClipboard('modal-email')"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+                <div class="detail" id="email-password-detail" style="display: none;">
+                    <label>Senha do Email:</label>
+                    <div class="value">
+                        <span id="modal-email-password" class="password-hidden">••••••••</span>
+                        <button class="toggle-password" onclick="togglePasswordVisibility('modal-email-password')"><i class="fas fa-eye"></i></button>
+                        <button onclick="copyToClipboard('modal-email-password')"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+                <div class="detail">
+                    <label>Tipo de Conta:</label>
+                    <div class="value">
+                        <span id="modal-tipo"></span>
+                    </div>
+                </div>
+                <div class="detail">
+                    <label>Média de Skins:</label>
+                    <div class="value">
+                        <span id="modal-skins"></span>
+                    </div>
+                </div>
+                <div class="detail" id="suspension-date-detail" style="display: none;">
+                    <label>Fim da Suspensão:</label>
+                    <div class="value">
+                        <span id="modal-suspension-date"></span>
+                    </div>
+                </div>
+                <div class="detail" id="days-left-detail" style="display: none;">
+                    <label>Dias Restantes:</label>
+                    <div class="value">
+                        <span id="modal-days-left"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="edit-account-container">
+                <button id="edit-account-button">Editar Informações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Informações da Conta -->
+    <div id="edit-account-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-edit-account-modal" class="close">&times;</span>
+            <h2>Editar Informações da Conta</h2>
+            <form id="edit-account-form">
+                <div class="form-group">
+                    <label for="edit-nickname">Nickname:</label>
+                    <input type="text" id="edit-nickname" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-senha">Senha:</label>
+                    <input type="password" id="edit-senha" required>
+                </div>
+                <div class="form-group" id="edit-email-group" style="display: none;">
+                    <label for="edit-email">Email:</label>
+                    <input type="email" id="edit-email">
+                </div>
+                <div class="form-group" id="edit-email-password-group" style="display: none;">
+                    <label for="edit-email-password">Senha do Email:</label>
+                    <input type="password" id="edit-email-password">
+                </div>
+                <div class="form-group">
+                    <label for="edit-elo">Elo:</label>
+                    <select id="edit-elo" required>
+                        <option value="Unranked_Rank">Unranked</option>
+                        <option value="Iron_1_Rank">Iron 1</option>
+                            <option value="Iron_2_Rank">Iron 2</option>
+                            <option value="Iron_3_Rank">Iron 3</option>
+                            <option value="Bronze_1_Rank">Bronze 1</option>
+                            <option value="Bronze_2_Rank">Bronze 2</option>
+                            <option value="Bronze_3_Rank">Bronze 3</option>
+                            <option value="Silver_1_Rank">Silver 1</option>
+                            <option value="Silver_2_Rank">Silver 2</option>
+                            <option value="Silver_3_Rank">Silver 3</option>
+                            <option value="Gold_1_Rank">Gold 1</option>
+                            <option value="Gold_2_Rank">Gold 2</option>
+                            <option value="Gold_3_Rank">Gold 3</option>
+                            <option value="Platinum_1_Rank">Platinum 1</option>
+                            <option value="Platinum_2_Rank">Platinum 2</option>
+                            <option value="Platinum_3_Rank">Platinum 3</option>
+                            <option value="Diamond_1_Rank">Diamond 1</option>
+                            <option value="Diamond_2_Rank">Diamond 2</option>
+                            <option value="Diamond_3_Rank">Diamond 3</option>
+                            <option value="Ascendant_1_Rank">Ascendant 1</option>
+                            <option value="Ascendant_2_Rank">Ascendant 2</option>
+                            <option value="Ascendant_3_Rank">Ascendant 3</option>
+                            <option value="Immortal_1_Rank">Immortal 1</option>
+                            <option value="Immortal_2_Rank">Immortal 2</option>
+                            <option value="Immortal_3_Rank">Immortal 3</option>
+                            <option value="Radiant_Rank">Radiant</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-skins">Média de Skins:</label>
+                    <select id="edit-skins" required>
+                        <option value="1-10">1-10</option>
+                        <option value="11-20">11-20</option>
+                        <option value="21-50">21-50</option>
+                        <option value="51-100">51-100</option>
+                        <option value="101+">101+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-status-uso">Status de Uso:</label>
+                    <select id="edit-status-uso" required>
+                        <option value="Ativa">Ativa</option>
+                        <option value="Inativa">Inativa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-status-condicao">Condição da Conta:</label>
+                    <select id="edit-status-condicao" required>
+                        <option value="Safe">Safe</option>
+                        <option value="Suspensa">Suspensa</option>
+                        <option value="Banida">Banida</option>
+                    </select>
+                </div>
+                <div class="form-group hidden" id="edit-suspension-group">
+                    <label for="edit-suspension-date">Data de Fim da Suspensão:</label>
+                    <input type="date" id="edit-suspension-date">
+                </div>
+                <button type="submit" id="edit-account-button">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="toast-container"></div>
+</body>
+</html>
