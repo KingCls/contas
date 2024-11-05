@@ -69,7 +69,6 @@ function initApp() {
         console.error('Erro ao fazer logout:', error);
       });
   });
-
   document.getElementById('import-account-button').addEventListener('click', () => {
     document.getElementById('import-account-modal').classList.remove('hidden');
   });
@@ -85,30 +84,32 @@ function initApp() {
     e.preventDefault();
     const importText = document.getElementById('import-text').value;
     try {
-      const accountData = parseAccountText(importText);
-      if (accountData) {
-        // Adicionar a conta ao Firestore
-        await addDoc(collection(db, 'contas'), {
-          userId: currentUser.uid,
-          userEmail: currentUser.email,
-          nickname: accountData.login + '#',
-          login: accountData.login,
-          senha: accountData.senhaLogin,
-          email: accountData.email,
-          emailPassword: accountData.senhaEmail,
-          tipo: 'FA', 
-          elo: 'Unranked_Rank', 
-          skins: 'N/A', 
-          statusUso: 'Ativa',
-          statusCondicao: 'Safe',
-          suspensionDate: null,
-          createdAt: serverTimestamp(),
-        });
-        showToast('Conta importada com sucesso!');
+      const accountsData = parseAccountText(importText);
+      if (accountsData && accountsData.length > 0) {
+        for (const accountData of accountsData) {
+          // Adicionar a conta ao Firestore
+          await addDoc(collection(db, 'contas'), {
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
+            nickname: accountData.nickname,
+            login: accountData.login,
+            senha: accountData.senhaLogin,
+            email: accountData.email,
+            emailPassword: accountData.senhaEmail,
+            tipo: accountData.tipo,
+            elo: 'Unranked_Rank', // Pode ajustar conforme necessário
+            skins: 'N/A', // Pode ajustar conforme necessário
+            statusUso: 'Ativa',
+            statusCondicao: 'Safe',
+            suspensionDate: null,
+            createdAt: serverTimestamp(),
+          });
+        }
+        showToast('Conta(s) importada(s) com sucesso!');
         document.getElementById('import-account-modal').classList.add('hidden');
         document.getElementById('import-account-form').reset();
       } else {
-        showToast('Não foi possível extrair as informações da conta.', 'error');
+        showToast('Não foi possível extrair as informações das contas.', 'error');
       }
     } catch (error) {
       console.error('Erro ao importar conta:', error);
@@ -116,37 +117,76 @@ function initApp() {
     }
   });
 
-  // Função para extrair as informações da conta do texto
+  // Função para extrair as informações das contas do texto
   function parseAccountText(text) {
-    const lines = text.split('\n');
-    let email = '';
-    let senhaEmail = '';
-    let login = '';
-    let senhaLogin = '';
+    const accounts = [];
+    const entries = text.split(/\n\s*\n/); // Divide por duplas quebras de linha para separar múltiplas contas
 
-    lines.forEach((line) => {
-      line = line.trim();
-      if (line.startsWith('Email:')) {
-        email = line.replace('Email:', '').trim();
-      } else if (line.startsWith('Senha:') && email && !senhaEmail) {
-        senhaEmail = line.replace('Senha:', '').trim();
-      } else if (line.startsWith('Usuário:')) {
-        login = line.replace('Usuário:', '').trim();
-      } else if (line.startsWith('Senha:') && login && !senhaLogin) {
-        senhaLogin = line.replace('Senha:', '').trim();
+    entries.forEach((entry) => {
+      const lines = entry.split('\n');
+      let email = '';
+      let senhaEmail = '';
+      let login = '';
+      let senhaLogin = '';
+      let tipo = '';
+      let nickname = '';
+
+      const simpleFormatMatches = entry.match(/^([^:\s]+):(.+)$/gm); // Para formato simples login:senha
+      if (simpleFormatMatches) {
+        simpleFormatMatches.forEach((line) => {
+          const [user, pass] = line.split(':');
+          login = user.trim();
+          senhaLogin = pass.trim();
+          nickname = login + '#';
+          tipo = 'NFA';
+          accounts.push({
+            email: null,
+            senhaEmail: null,
+            login,
+            senhaLogin,
+            tipo,
+            nickname,
+          });
+        });
+      } else {
+        // Tenta extrair informações de formatos complexos
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.toLowerCase().includes('full acesso') || line.toLowerCase().includes('full access') || line.toLowerCase().includes('fa')) {
+            tipo = 'FA';
+          } else if (line.toLowerCase().includes('no full acesso') || line.toLowerCase().includes('nfa') || line.toLowerCase().includes('no full access')) {
+            tipo = 'NFA';
+          }
+
+          if (line.startsWith('Email:')) {
+            email = line.replace('Email:', '').trim();
+          } else if (line.startsWith('Senha:') && email && !senhaEmail) {
+            senhaEmail = line.replace('Senha:', '').trim();
+          } else if (line.startsWith('Usuário:')) {
+            login = line.replace('Usuário:', '').trim();
+          } else if (line.startsWith('Senha:') && login && !senhaLogin) {
+            senhaLogin = line.replace('Senha:', '').trim();
+          }
+        });
+
+        if (login && senhaLogin) {
+          if (!tipo) {
+            tipo = email ? 'FA' : 'NFA';
+          }
+          nickname = login + '#';
+          accounts.push({
+            email: email || null,
+            senhaEmail: senhaEmail || null,
+            login,
+            senhaLogin,
+            tipo,
+            nickname,
+          });
+        }
       }
     });
 
-    if (email && senhaEmail && login && senhaLogin) {
-      return {
-        email,
-        senhaEmail,
-        login,
-        senhaLogin,
-      };
-    } else {
-      return null;
-    }
+    return accounts;
   }
   // Controle do passo a passo
   let currentStep = 1;
@@ -321,22 +361,95 @@ function initApp() {
   }
 
   // Lógica para exibir as contas
-  const accountsTableBody = document.querySelector('#accounts-table tbody');
-  const contasCol = collection(db, 'contas');
+  let filterName = '';
+  let filterElo = '';
+  let filterType = '';
 
-  console.log('Consultando contas para userId:', currentUser.uid);
+  // Elementos do filtro
+  const filterNameInput = document.getElementById('filter-name');
+  const filterEloSelect = document.getElementById('filter-elo');
+  const filterTypeSelect = document.getElementById('filter-type');
 
-  // Obter contas do usuário atual em tempo real e renderizar na tabela
-  const contasQuery = query(contasCol, where('userId', '==', currentUser.uid));
-  onSnapshot(contasQuery, (snapshot) => {
-    accountsTableBody.innerHTML = '';
-    snapshot.forEach((docData) => renderAccount(docData));
+  // Event Listeners para busca instantânea
+  filterNameInput.addEventListener('input', () => {
+    filterName = filterNameInput.value.trim().toLowerCase();
+    renderAccounts();
   });
 
-  // Função para renderizar uma conta na tabela
-  function renderAccount(docData) {
+  filterEloSelect.addEventListener('change', () => {
+    filterElo = filterEloSelect.value;
+    renderAccounts();
+  });
+
+  filterTypeSelect.addEventListener('change', () => {
+    filterType = filterTypeSelect.value;
+    renderAccounts();
+  });
+
+  // Obter contas do usuário atual em tempo real
+  const contasCol = collection(db, 'contas');
+  const contasQuery = query(contasCol, where('userId', '==', currentUser.uid));
+  let allAccounts = [];
+
+  onSnapshot(contasQuery, (snapshot) => {
+    allAccounts = [];
+    snapshot.forEach((docData) => {
+      const account = { id: docData.id, data: docData.data() };
+      allAccounts.push(account);
+    });
+    renderAccounts();
+  });
+
+  document.getElementById('reset-filter-button').addEventListener('click', () => {
+    // Limpa os filtros
+    filterName = '';
+    filterElo = '';
+    filterType = '';
+  
+    // Reseta os valores dos inputs e selects para o padrão
+    filterNameInput.value = '';
+    filterEloSelect.value = '';
+    filterTypeSelect.value = '';
+  
+    // Renderiza novamente as contas sem os filtros
+    renderAccounts();
+  });
+
+  // Função para renderizar as contas aplicando os filtros
+  function renderAccounts() {
+    const accountsTableBody = document.querySelector('#accounts-table tbody');
+    accountsTableBody.innerHTML = '';
+
+    // Filtrar as contas
+    const filteredAccounts = allAccounts.filter((accountObj) => {
+      const account = accountObj.data;
+      const matchesName = account.nickname.toLowerCase().includes(filterName);
+      const matchesElo = filterElo ? account.elo === filterElo : true;
+      const matchesType = filterType ? account.tipo === filterType : true;
+      return matchesName && matchesElo && matchesType;
+    });
+
+    // Verificar se há contas para exibir
+    if (filteredAccounts.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td colspan="6" style="text-align: center;">Nenhuma conta encontrada.</td>
+      `;
+      accountsTableBody.appendChild(tr);
+    } else {
+      // Renderizar as contas filtradas
+      filteredAccounts.forEach((accountObj) => {
+        renderAccount(accountObj);
+      });
+    }
+  }
+
+  // Função para renderizar uma conta na tabela (modificada)
+  function renderAccount(accountObj) {
+    const accountsTableBody = document.querySelector('#accounts-table tbody');
     const tr = document.createElement('tr');
-    const account = docData.data();
+    const account = accountObj.data;
+    const docId = accountObj.id;
     const eloImg = `rank_png/${account.elo}.png`;
     const statusUsoClass = updateStatusUsoColor(account.statusUso);
     const statusCondicaoClass = updateStatusCondicaoColor(account.statusCondicao);
@@ -355,14 +468,14 @@ function initApp() {
 
     // Botão Ver
     tr.querySelector('.view').addEventListener('click', () => {
-      showAccountDetails(account, docData.id);
+      showAccountDetails(account, docId);
     });
 
     // Botão Excluir
     tr.querySelector('.delete').addEventListener('click', async () => {
       const confirmDelete = confirm('Tem certeza que deseja excluir esta conta?');
       if (confirmDelete) {
-        const docRef = doc(db, 'contas', docData.id);
+        const docRef = doc(db, 'contas', docId);
         await deleteDoc(docRef);
         showToast('Conta excluída com sucesso!');
       }

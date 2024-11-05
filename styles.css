@@ -747,3 +747,62 @@ button[type="submit"]:hover {
     transform: scale(1); /* Remove o aumento ao clicar */
 }
 
+/* Estilos para a seção de filtro */
+/* Estilos para a seção de filtro */
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-container input[type="text"],
+.filter-container select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.filter-container input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-container select {
+    min-width: 150px;
+}
+
+#filter-button,
+#reset-filter-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Estilo para o botão de "Filtrar" */
+#filter-button {
+    background-color: #007bff; /* Azul primário */
+    color: white;
+}
+
+#filter-button:hover {
+    background-color: #0056b3; /* Azul mais escuro no hover */
+}
+
+/* Estilo para o botão de "Limpar Filtros" */
+#reset-filter-button {
+    background-color: #ff6b81; /* Vermelho claro */
+    color: white;
+}
+
+#reset-filter-button:hover {
+    background-color: #e05263; /* Vermelho mais escuro no hover */
+}
+

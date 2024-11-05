@@ -26,7 +26,43 @@
                 <button id="import-account-button">Importar Conta</button>
             </div>
         </div>
-
+        <div class="filter-container">
+            <input type="text" id="filter-name" placeholder="Pesquisar por nome...">
+            <select id="filter-elo">
+                <option value="Unranked_Rank">Unranked</option>
+                                <option value="Iron_1_Rank">Iron 1</option>
+                                <option value="Iron_2_Rank">Iron 2</option>
+                                <option value="Iron_3_Rank">Iron 3</option>
+                                <option value="Bronze_1_Rank">Bronze 1</option>
+                                <option value="Bronze_2_Rank">Bronze 2</option>
+                                <option value="Bronze_3_Rank">Bronze 3</option>
+                                <option value="Silver_1_Rank">Silver 1</option>
+                                <option value="Silver_2_Rank">Silver 2</option>
+                                <option value="Silver_3_Rank">Silver 3</option>
+                                <option value="Gold_1_Rank">Gold 1</option>
+                                <option value="Gold_2_Rank">Gold 2</option>
+                                <option value="Gold_3_Rank">Gold 3</option>
+                                <option value="Platinum_1_Rank">Platinum 1</option>
+                                <option value="Platinum_2_Rank">Platinum 2</option>
+                                <option value="Platinum_3_Rank">Platinum 3</option>
+                                <option value="Diamond_1_Rank">Diamond 1</option>
+                                <option value="Diamond_2_Rank">Diamond 2</option>
+                                <option value="Diamond_3_Rank">Diamond 3</option>
+                                <option value="Ascendant_1_Rank">Ascendant 1</option>
+                                <option value="Ascendant_2_Rank">Ascendant 2</option>
+                                <option value="Ascendant_3_Rank">Ascendant 3</option>
+                                <option value="Immortal_1_Rank">Immortal 1</option>
+                                <option value="Immortal_2_Rank">Immortal 2</option>
+                                <option value="Immortal_3_Rank">Immortal 3</option>
+                                <option value="Radiant_Rank">Radiant</option>
+            </select>
+            <select id="filter-type">
+                <option value="">Todos os Tipos</option>
+                <option value="NFA">NFA</option>
+                <option value="FA">FA</option>
+            </select>
+            <button id="reset-filter-button">Limpar Filtros</button>
+        </div>
         <table id="accounts-table">
             <thead>
                 <tr>
@@ -56,6 +92,7 @@
             </form>
         </div>
     </div>
+    
     
 
     <!-- Modal de Adicionar Conta -->
