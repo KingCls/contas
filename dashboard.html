@@ -21,7 +21,10 @@
     <div class="container">
         <div class="header">
             <h1>Lista de Contas</h1>
-            <button id="add-account-button">Adicionar Conta</button>
+            <div class="actions">
+                <button id="add-account-button">Adicionar Conta</button>
+                <button id="import-account-button">Importar Conta</button>
+            </div>
         </div>
 
         <table id="accounts-table">
@@ -38,6 +41,22 @@
             <tbody></tbody>
         </table>
     </div>
+
+    <!-- Modal de Importar Conta -->
+    <div id="import-account-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-import-account-modal" class="close">&times;</span>
+            <h2>Importar Conta</h2>
+            <form id="import-account-form">
+                <div class="form-group">
+                    <label for="import-text">Cole as informações da conta aqui:</label>
+                    <textarea id="import-text" rows="10" required></textarea>
+                </div>
+                <button type="submit">Importar Conta</button>
+            </form>
+        </div>
+    </div>
+    
 
     <!-- Modal de Adicionar Conta -->
     <div id="add-account-modal" class="modal hidden">

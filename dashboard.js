@@ -70,6 +70,84 @@ function initApp() {
       });
   });
 
+  document.getElementById('import-account-button').addEventListener('click', () => {
+    document.getElementById('import-account-modal').classList.remove('hidden');
+  });
+
+  // Fechar o modal de importar conta
+  document.getElementById('close-import-account-modal').addEventListener('click', () => {
+    document.getElementById('import-account-modal').classList.add('hidden');
+    document.getElementById('import-account-form').reset();
+  });
+
+  // Processar o formulário de importação
+  document.getElementById('import-account-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const importText = document.getElementById('import-text').value;
+    try {
+      const accountData = parseAccountText(importText);
+      if (accountData) {
+        // Adicionar a conta ao Firestore
+        await addDoc(collection(db, 'contas'), {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          nickname: accountData.login + '#',
+          login: accountData.login,
+          senha: accountData.senhaLogin,
+          email: accountData.email,
+          emailPassword: accountData.senhaEmail,
+          tipo: 'FA', 
+          elo: 'Unranked_Rank', 
+          skins: 'N/A', 
+          statusUso: 'Ativa',
+          statusCondicao: 'Safe',
+          suspensionDate: null,
+          createdAt: serverTimestamp(),
+        });
+        showToast('Conta importada com sucesso!');
+        document.getElementById('import-account-modal').classList.add('hidden');
+        document.getElementById('import-account-form').reset();
+      } else {
+        showToast('Não foi possível extrair as informações da conta.', 'error');
+      }
+    } catch (error) {
+      console.error('Erro ao importar conta:', error);
+      showToast('Erro ao importar conta: ' + error.message, 'error');
+    }
+  });
+
+  // Função para extrair as informações da conta do texto
+  function parseAccountText(text) {
+    const lines = text.split('\n');
+    let email = '';
+    let senhaEmail = '';
+    let login = '';
+    let senhaLogin = '';
+
+    lines.forEach((line) => {
+      line = line.trim();
+      if (line.startsWith('Email:')) {
+        email = line.replace('Email:', '').trim();
+      } else if (line.startsWith('Senha:') && email && !senhaEmail) {
+        senhaEmail = line.replace('Senha:', '').trim();
+      } else if (line.startsWith('Usuário:')) {
+        login = line.replace('Usuário:', '').trim();
+      } else if (line.startsWith('Senha:') && login && !senhaLogin) {
+        senhaLogin = line.replace('Senha:', '').trim();
+      }
+    });
+
+    if (email && senhaEmail && login && senhaLogin) {
+      return {
+        email,
+        senhaEmail,
+        login,
+        senhaLogin,
+      };
+    } else {
+      return null;
+    }
+  }
   // Controle do passo a passo
   let currentStep = 1;
   const totalSteps = 4;
@@ -480,6 +558,8 @@ function initApp() {
         console.error('Erro ao copiar texto: ', err);
       });
   };
+
+
 
   // Função para alternar a visibilidade da senha
   window.togglePasswordVisibility = function (elementId) {
