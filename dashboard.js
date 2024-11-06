@@ -84,110 +84,94 @@ function initApp() {
     e.preventDefault();
     const importText = document.getElementById('import-text').value;
     try {
-      const accountsData = parseAccountText(importText);
-      if (accountsData && accountsData.length > 0) {
-        for (const accountData of accountsData) {
-          // Adicionar a conta ao Firestore
-          await addDoc(collection(db, 'contas'), {
-            userId: currentUser.uid,
-            userEmail: currentUser.email,
-            nickname: accountData.nickname,
-            login: accountData.login,
-            senha: accountData.senhaLogin,
-            email: accountData.email,
-            emailPassword: accountData.senhaEmail,
-            tipo: accountData.tipo,
-            elo: 'Unranked_Rank', // Pode ajustar conforme necessário
-            skins: 'N/A', // Pode ajustar conforme necessário
-            statusUso: 'Ativa',
-            statusCondicao: 'Safe',
-            suspensionDate: null,
-            createdAt: serverTimestamp(),
-          });
+        const accountsData = parseAccountText(importText);
+        if (accountsData && accountsData.length > 0) {
+            for (const accountData of accountsData) {
+                // Adicionar a conta ao Firestore
+                await addDoc(collection(db, 'contas'), {
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    nickname: accountData.nickname,
+                    login: accountData.login,
+                    senha: accountData.senhaLogin,
+                    email: accountData.email,
+                    emailPassword: accountData.senhaEmail,
+                    tipo: accountData.tipo,
+                    elo: 'Unranked_Rank', // Pode ajustar conforme necessário
+                    skins: 'N/A', // Pode ajustar conforme necessário
+                    statusUso: 'Ativa',
+                    statusCondicao: 'Safe',
+                    suspensionDate: null,
+                    createdAt: serverTimestamp(),
+                });
+            }
+            showToast('Conta(s) importada(s) com sucesso!');
+            document.getElementById('import-account-modal').classList.add('hidden');
+            document.getElementById('import-account-form').reset();
+        } else {
+            showToast('Não foi possível extrair as informações das contas.', 'error');
         }
-        showToast('Conta(s) importada(s) com sucesso!');
-        document.getElementById('import-account-modal').classList.add('hidden');
-        document.getElementById('import-account-form').reset();
-      } else {
-        showToast('Não foi possível extrair as informações das contas.', 'error');
-      }
     } catch (error) {
-      console.error('Erro ao importar conta:', error);
-      showToast('Erro ao importar conta: ' + error.message, 'error');
+        console.error('Erro ao importar conta:', error);
+        showToast('Erro ao importar conta: ' + error.message, 'error');
     }
-  });
+});
 
-  // Função para extrair as informações das contas do texto
-  function parseAccountText(text) {
+// Função para extrair as informações das contas do texto
+function parseAccountText(text) {
     const accounts = [];
     const entries = text.split(/\n\s*\n/); // Divide por duplas quebras de linha para separar múltiplas contas
 
     entries.forEach((entry) => {
-      const lines = entry.split('\n');
-      let email = '';
-      let senhaEmail = '';
-      let login = '';
-      let senhaLogin = '';
-      let tipo = '';
-      let nickname = '';
+        const lines = entry.split('\n');
+        let email = '';
+        let senhaEmail = '';
+        let login = '';
+        let senhaLogin = '';
+        let tipo = '';
+        let nickname = '';
 
-      const simpleFormatMatches = entry.match(/^([^:\s]+):(.+)$/gm); // Para formato simples login:senha
-      if (simpleFormatMatches) {
-        simpleFormatMatches.forEach((line) => {
-          const [user, pass] = line.split(':');
-          login = user.trim();
-          senhaLogin = pass.trim();
-          nickname = login + '#';
-          tipo = 'NFA';
-          accounts.push({
-            email: null,
-            senhaEmail: null,
-            login,
-            senhaLogin,
-            tipo,
-            nickname,
-          });
-        });
-      } else {
-        // Tenta extrair informações de formatos complexos
+        let foundLogin = false; // Indicador para saber se o login foi encontrado
+
         lines.forEach((line) => {
-          line = line.trim();
-          if (line.toLowerCase().includes('full acesso') || line.toLowerCase().includes('full access') || line.toLowerCase().includes('fa')) {
-            tipo = 'FA';
-          } else if (line.toLowerCase().includes('no full acesso') || line.toLowerCase().includes('nfa') || line.toLowerCase().includes('no full access')) {
-            tipo = 'NFA';
-          }
+            line = line.trim();
+            if (line.toLowerCase().includes('full acesso') || line.toLowerCase().includes('full access') || line.toLowerCase().includes('fa')) {
+                tipo = 'FA';
+            } else if (line.toLowerCase().includes('no full acesso') || line.toLowerCase().includes('nfa') || line.toLowerCase().includes('no full access')) {
+                tipo = 'NFA';
+            }
 
-          if (line.startsWith('Email:')) {
-            email = line.replace('Email:', '').trim();
-          } else if (line.startsWith('Senha:') && email && !senhaEmail) {
-            senhaEmail = line.replace('Senha:', '').trim();
-          } else if (line.startsWith('Usuário:')) {
-            login = line.replace('Usuário:', '').trim();
-          } else if (line.startsWith('Senha:') && login && !senhaLogin) {
-            senhaLogin = line.replace('Senha:', '').trim();
-          }
+            if (line.startsWith('Usuário:')) {
+                login = line.replace('Usuário:', '').trim();
+                foundLogin = true;
+            } else if (line.startsWith('Senha:') && foundLogin) {
+                senhaLogin = line.replace('Senha:', '').trim();
+            } else if (line.startsWith('Email:')) {
+                email = line.replace('Email:', '').trim();
+            } else if (line.startsWith('Senha:') && email && !senhaEmail) {
+                senhaEmail = line.replace('Senha:', '').trim();
+            }
         });
 
+        // Verifica se temos login e senha para adicionar a conta
         if (login && senhaLogin) {
-          if (!tipo) {
-            tipo = email ? 'FA' : 'NFA';
-          }
-          nickname = login + '#';
-          accounts.push({
-            email: email || null,
-            senhaEmail: senhaEmail || null,
-            login,
-            senhaLogin,
-            tipo,
-            nickname,
-          });
+            if (!tipo) {
+                tipo = email ? 'FA' : 'NFA';
+            }
+            nickname = login + '#';
+            accounts.push({
+                email: email || null,
+                senhaEmail: senhaEmail || null,
+                login,
+                senhaLogin,
+                tipo,
+                nickname,
+            });
         }
-      }
     });
 
     return accounts;
-  }
+}
   // Controle do passo a passo
   let currentStep = 1;
   const totalSteps = 4;
