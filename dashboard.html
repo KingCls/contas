@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <title>Painel - Gerenciador de Contas</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Incluindo o Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <!-- Incluindo o script do dashboard -->
     <script type="module" defer src="dashboard.js"></script>
 </head>
 <body>
@@ -78,7 +76,6 @@
         </table>
     </div>
 
-    <!-- Modal de Importar Conta -->
     <div id="import-account-modal" class="modal hidden">
         <div class="modal-content">
             <span id="close-import-account-modal" class="close">&times;</span>
@@ -95,13 +92,11 @@
     
     
 
-    <!-- Modal de Adicionar Conta -->
     <div id="add-account-modal" class="modal hidden">
         <div class="modal-content">
             <span id="close-add-account-modal" class="close">&times;</span>
             <h2>Adicionar Nova Conta</h2>
             <form id="add-account-form">
-                <!-- Passo 1 -->
                 <div class="step step-1">
                     <h3>Passo 1: Informações Básicas</h3>
                     <div class="form-group">
@@ -117,7 +112,6 @@
                         <input type="password" id="senha" required>
                     </div>
                 </div>
-                <!-- Passo 2 -->
                 <div class="step step-2 hidden">
                     <h3>Passo 2: Detalhes da Conta</h3>
                     <div class="form-group">
@@ -172,7 +166,6 @@
                         </select>
                     </div>
                 </div>
-                <!-- Passo 3 -->
                 <div class="step step-3 hidden">
                     <h3>Passo 3: Status da Conta</h3>
                     <div class="form-group">
@@ -195,7 +188,6 @@
                         <input type="date" id="suspension-date">
                     </div>
                 </div>
-                <!-- Passo 4 -->
                 <div class="step step-4 hidden">
                     <h3>Passo 4: Confirmação</h3>
                     <div class="form-group" id="email-group" style="display: none;">
@@ -208,7 +200,6 @@
                     </div>
                     <p>Revise as informações antes de adicionar a conta.</p>
                 </div>
-                <!-- Botões de Navegação -->
                 <div class="form-navigation">
                     <button type="button" id="prev-step" class="hidden">Anterior</button>
                     <button type="button" id="next-step">Próximo</button>
@@ -218,7 +209,6 @@
         </div>
     </div>
 
-    <!-- Modal para Detalhes da Conta -->
     <div id="account-modal" class="modal hidden">
         <div class="modal-content">
             <span id="close-modal" class="close">&times;</span>
@@ -289,7 +279,6 @@
         </div>
     </div>
 
-    <!-- Modal para Editar Informações da Conta -->
     <div id="edit-account-modal" class="modal hidden">
         <div class="modal-content">
             <span id="close-edit-account-modal" class="close">&times;</span>
